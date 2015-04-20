@@ -19,7 +19,6 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/angular-hu/angular-hu",
-  "private": "false",
   "ignore": [
     "index.js",
     "package.json"
