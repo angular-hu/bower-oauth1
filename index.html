@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>angular-hu-oauth1 by angular-hu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">angular-hu-oauth1</h1>
+      <h2 class="project-tagline">Sign $http requests with OAuth1 - httpu.oauth1</h2>
+      <a href="https://github.com/angular-hu/bower-oauth1" class="btn">View on GitHub</a>
+      <a href="https://github.com/angular-hu/bower-oauth1/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/angular-hu/bower-oauth1/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="httpuoauth1" class="anchor" href="#httpuoauth1" aria-hidden="true"><span class="octicon octicon-link"></span></a>httpu.oauth1</h2>
+
+<p>Factory that creates an <a href="https://docs.angularjs.org/api/ng/service/%24http">interceptor</a> to sign oauth1 requests. Once you have arrived here, you must know that <em>storing secrets in the client</em>, even for signing requests, is <strong>not</strong> safe. The secret you will use in this module can be seen by anybody. </p>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>Get it from <a href="http://bower.io/">bower</a> or directly download it.</p>
+
+<div class="highlight highlight-sh"><pre>bower install --save angular-hu-oauth1</pre></div>
+
+<p>Add the oauth1 and the signature generation dependency in the HTML</p>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>bower_components/oauth-signature-js/dist/oauth-signature.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
+&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>bower_components/angular-hu-oauth1/oauth1.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<p>Add the <code>httpu.oauth1</code> dependency to your App Module</p>
+
+<div class="highlight highlight-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>MyApp<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>httpu.oauth1<span class="pl-pds">'</span></span>]);</pre></div>
+
+<p>The <code>huOAuth1InterceptorFactory</code> dependency is now available</p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<div class="highlight highlight-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>MyApp<span class="pl-pds">'</span></span>)
+.config(<span class="pl-k">function</span>(<span class="pl-smi">$httpProvider</span>) {
+  $httpProvider.interceptors.<span class="pl-c1">push</span>(<span class="pl-s"><span class="pl-pds">'</span>oauthInterceptor<span class="pl-pds">'</span></span>);
+})
+<span class="pl-c">//Create your specific backend oauth implementation to be added to your request interceptors</span>
+.factory(<span class="pl-s"><span class="pl-pds">'</span>oauthInterceptor<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">huOAuth1InterceptorFactory</span>) {
+  <span class="pl-c">//all parameters are optional.</span>
+  <span class="pl-c">//Refer to source code for default implementations and more instantiation options are below</span>
+  <span class="pl-k">return</span> huOAuth1InterceptorFactory({
+    getTimestamp<span class="pl-k">:</span> myTimestampGetter <span class="pl-c">//oauth must be signed with your server time. </span>
+  });
+})
+.run(<span class="pl-k">function</span>(<span class="pl-smi">$http</span>) {
+  $http.get(<span class="pl-s"><span class="pl-pds">'</span>http://myapi.com/things<span class="pl-pds">'</span></span>, {
+    params<span class="pl-k">:</span> {
+      id<span class="pl-k">:</span> <span class="pl-c1">5</span>
+    },
+    oauth1<span class="pl-k">:</span> {
+      consumerKey<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>myConsumerKey<span class="pl-pds">'</span></span>,
+      consumerSecret<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>myConsumerSecret<span class="pl-pds">'</span></span>
+    }
+  });
+  <span class="pl-c">//GET http://myapi.com/things?id=5&amp;oauth_consumer_key=myConsumerKey&amp;oauth_nonce=W5x7uncL3ni&amp;oauth_timestamp=123434334&amp;oauth_signature=9frD%2Bwl4j6zsXtztwWHIRqFKmu8%3D&amp;oauth_signature_method=HMAC-SHA1&amp;oauth_version=1.0</span>
+});</pre></div>
+
+<h3>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<p>Options to pass to <code>huOAuth1InterceptorFactory</code> at instantiation time </p>
+
+<h4>
+<a id="gettimestamp" class="anchor" href="#gettimestamp" aria-hidden="true"><span class="octicon octicon-link"></span></a>getTimestamp</h4>
+
+<p>Function to retrieve the server timestamp. Must return <code>Number</code> or a promise resolving to a <code>Number</code> that represents the current server time in <em>seconds</em> </p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">myTimestampGetter</span>() {
+  <span class="pl-k">return</span> $http.get(<span class="pl-s"><span class="pl-pds">'</span>http://myserver.com/time<span class="pl-pds">'</span></span>)
+    .then(<span class="pl-k">function</span>(<span class="pl-smi">response</span>) {
+      <span class="pl-k">return</span> response.<span class="pl-c1">data</span>;
+    });
+}
+<span class="pl-k">return</span> huOAuth1InterceptorFactory({
+    getTimestamp<span class="pl-k">:</span> myTimestampGetter <span class="pl-c">//oauth must be signed with your server time. </span>
+  });</pre></div>
+
+<h4>
+<a id="serializer" class="anchor" href="#serializer" aria-hidden="true"><span class="octicon octicon-link"></span></a>serializer</h4>
+
+<p>Function to convert the request <code>params</code> property to a set of <code>{key, value}</code> strings. This set <em>must</em> be the same that angular is using to generate your URL, so refer to <code>httpu.serializer</code> module to make a DRY implementation.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">mySerializer</span>(<span class="pl-smi">params</span>, <span class="pl-smi">addKeyValue</span>) {
+  <span class="pl-c">//`params` is the request params property: {id: 5} in the above example</span>
+  <span class="pl-c">//`addKeyValue` is the {Function} to call with every {key, value} set </span>
+  angular.forEach(params, <span class="pl-k">function</span>(<span class="pl-smi">value</span>, <span class="pl-smi">key</span>) {
+    <span class="pl-k">if</span> (angular.isDate(value)) {
+      <span class="pl-c">//our Backend understand dates as ISOStrings</span>
+      addKeyValue(key, value.toISOString());    
+    } <span class="pl-k">else</span> {
+      addKeyValue(key, <span class="pl-c1">String</span>(value));
+    }
+  });
+}
+
+<span class="pl-k">return</span> huOAuth1InterceptorFactory({
+    serializer<span class="pl-k">:</span> mySerializer <span class="pl-c">//oauth must be signed with your server time. </span>
+  });</pre></div>
+
+<h4>
+<a id="createerror" class="anchor" href="#createerror" aria-hidden="true"><span class="octicon octicon-link"></span></a>createError</h4>
+
+<p>Function to create errors that may happen inside the interceptor. Use this method when you have some kind of error recovery executing in your interceptors chain. Creating errors on interceptors is dangerous, cause another interceptor with requestError/responseError can have other error management strategies.
+This interceptor creates an error when you don't specify a <code>consumerKey</code> or <code>consumerSecret</code> in the request <code>oauth1</code> property. It also catches the possible errors in your <code>getTimestamp</code> and signature generation implementation.</p>
+
+<p>The current request will be rejected with the object this function returns</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">myCreateError</span>(<span class="pl-smi">config</span>, <span class="pl-smi">error</span>) {
+  <span class="pl-c">//`config` is the request config property</span>
+  <span class="pl-c">//`error` is the original error that caused this interceptor to fail</span>
+  config<span class="pl-c1">.error</span> <span class="pl-k">=</span> err;
+  <span class="pl-k">return</span> config;
+}
+
+<span class="pl-k">return</span> huOAuth1InterceptorFactory({
+    createError<span class="pl-k">:</span> myCreateError  
+  });</pre></div>
+
+<h3>
+<a id="use-cases" class="anchor" href="#use-cases" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use cases</h3>
+
+<ul>
+<li>You have one or severals backends that need oauth1 signed request, with different configurations. </li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>LICENSE</h2>
+
+<p>The MIT License (<a href="LICENSE">MIT</a>)</p>
+
+<p>Copyright (c) 2015 Telefónica I+D - <a href="http://www.tid.es">http://www.tid.es</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/angular-hu/bower-oauth1">angular-hu-oauth1</a> is maintained by <a href="https://github.com/angular-hu">angular-hu</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
