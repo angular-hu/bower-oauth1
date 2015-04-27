@@ -1,0 +1,30 @@
+{
+  "name": "angular-hu-oauth1",
+  "version": "1.0.0",
+  "authors": [
+    "Javier Mendiara Cañardo <javier.mendiaracanardo@telefonica.com>"
+  ],
+  "description": "Sign angular requests with Oauth1",
+  "main": "oauth1.js",
+  "keywords": [
+    "angular",
+    "utilities",
+    "http",
+    "$http",
+    "oauth1"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular-hu/angular-hu"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/angular-hu/angular-hu",
+  "ignore": [
+    "index.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "angular": ">= 1.2.7",
+    "oauth-signature-js": "1.2.1"
+  }
+}
