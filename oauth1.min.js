@@ -1,5 +1,5 @@
 /**
- * angular-hu-oauth1 v1.1.0-alpha2
+ * angular-hu-oauth1 v1.1.0-beta1
  * https://github.com/angular-hu/angular-hu
  * (c) 2015 Telefónica I+D - http://www.tid.es
  * @license MIT
